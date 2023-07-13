@@ -46,7 +46,12 @@ while True:
     print("3. Consultar Paciente")
     print("4. Salir")
     #validar que sea un digito la opcion
-    opcion = int(input("Seleccione una opción: "))
+    
+    try:
+        opcion = int(input("Seleccione una opción: "))
+    except:
+        print("Opción inválida, intente nuevamente.")
+        continue
     
     if opcion == 1:
         rut_valido = False
@@ -83,7 +88,7 @@ while True:
         while not genero_valido:
             genero = input("Ingrese el género del paciente (M/F): ")
             #considere un carácter para identificarlo
-            if (genero in ["M", "F"] and len(genero) == 1):
+            if (genero.upper() in ["M", "F"] and len(genero) == 1):
                 genero_valido = True
             else:
                 print("Género inválido, intente nuevamente.")
@@ -96,7 +101,7 @@ while True:
             else:
                 print("Estado de salud inválido, intente nuevamente.")
         
-        paciente = Paciente(rut, nombre, apellidos, direccion, correo, edad, genero, estado_salud)
+        paciente = Paciente(rut, nombre, apellidos, direccion, correo, edad, genero.upper(), estado_salud)
         sistema.registrar_paciente(paciente)
         print("Paciente registrado con éxito.")
         
@@ -112,8 +117,11 @@ while True:
             while not fecha_valida:
                 fecha = input("Ingrese la fecha de la visita (formato DD/MM/AAAA): ")
                 try:
-                    datetime.datetime.strptime(fecha, "%d/%m/%Y")
-                    fecha_valida = True
+                    #validar que la fecha no sea posterior a la actual
+                    if (datetime.datetime.strptime(fecha, "%d/%m/%Y") > datetime.datetime.now()):
+                        print("La fecha de la visita no puede ser posterior a la fecha actual.")
+                    else:
+                        fecha_valida = True
                 except:
                     print("Formato de fecha incorrecto, intente nuevamente.")
             observacion = input("Ingrese la observación de la visita: ")
@@ -134,7 +142,7 @@ while True:
 
     elif opcion == 4:
         print("Fecha actual: ", datetime.datetime.now().strftime("%d/%m/%Y"))
-        print("Integrantes del grupo: Claudio, Johar")
+        print("Integrantes del grupo: Claudio Quinteros y Johar Osorio")
         print("Asignatura: Lenguajes de Programación")
         print("Versión de la aplicación: 1.0")
         confirmacion = input("¿Estás seguro de que quieres salir? (S/N): ")
